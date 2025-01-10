@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jiu Jitsu Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    #timer {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+    }
+    #status {
+      font-size: 2rem;
+      color: #00ff00;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div id="timer">05:00</div>
+    <div id="status">Treino</div>
+  </div>
+
+  <script>
+    const workoutTime = 5 * 60; // 5 minutos em segundos
+    const restTime = 2 * 60; // 2 minutos em segundos
+    const rounds = 5; // Número de rodadas
+
+    let currentRound = 1;
+    let currentTime = workoutTime;
+    let isWorkout = true;
+
+    const timerElement = document.getElementById('timer');
+    const statusElement = document.getElementById('status');
+
+    function formatTime(seconds) {
+      const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const secs = String(seconds % 60).padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    function updateTimer() {
+      timerElement.textContent = formatTime(currentTime);
+      statusElement.textContent = isWorkout ? 'Treino' : 'Descanso';
+      statusElement.style.color = isWorkout ? '#00ff00' : '#ff4500';
+    }
+
+    function runTimer() {
+      const interval = setInterval(() => {
+        if (currentTime > 0) {
+          currentTime--;
+        } else {
+          if (isWorkout) {
+            isWorkout = false;
+            currentTime = restTime;
+          } else {
+            currentRound++;
+            if (currentRound > rounds) {
+              clearInterval(interval);
+              statusElement.textContent = 'Fim do Treino!';
+              timerElement.textContent = '';
+              return;
+            }
+            isWorkout = true;
+            currentTime = workoutTime;
+          }
+        }
+        updateTimer();
+      }, 1000);
+    }
+
+    // Inicialize o timer
+    updateTimer();
+    runTimer();
+  </script>
+</body>
+</html>
