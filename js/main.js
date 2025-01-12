@@ -95,35 +95,10 @@ function tocargongo() {
     somInicio.play();
 }
 
-function TryTelaCheia() {
-  // Entrar em tela cheia
-  var el = document.body;
-
-  // Supports most browsers and their versions.
-  var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen 
-  || el.mozRequestFullScreen || el.msRequestFullScreen;
-
-  if (requestMethod) {
-
-      // Native full screen.
-      requestMethod.call(el);
-
-  } else if (typeof window.ActiveXObject !== "undefined") {
-
-      // Older IE.
-      var wscript = new ActiveXObject("WScript.Shell");
-
-      if (wscript !== null) {
-      wscript.SendKeys("{F11}");
-      }
-  }
-} 
-
 
 // Função para alternar entre pausar e retomar o timer
 function alternarPausa() {
     if (State == 'Iniciar') {
-        TryTelaCheia();
         State = 'Em treino';
         iniciarTimer();
         tocargongo();
@@ -222,7 +197,6 @@ const inicializar = function () {
     setInterval(atualizarRelogio, 1000); // Atualiza a cada segundo
     atualizarRelogio(); // Atualiza imediatamente
     atualizarExibição(); // Atualiza a exibição do timer
-    TryTelaCheia(); // Tela cheia
 
     // Adiciona o evento de teclado
     document.addEventListener('keydown', function(e) {
