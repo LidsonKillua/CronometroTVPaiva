@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #000000;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.container {
+    display: flex;
+    height: 100vh; /* Ajusta a altura para ocupar toda a tela */
+    width: 100vw; /* Ajusta a largura para ocupar toda a tela */
+}
+
+.coluna-esquerda {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.coluna-direita {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#relógio {
+    font-size: 5rem;
+    color: #f0f0f0;
+}
+
+#temporizador {
+    font-size: 10rem;
+    color: #333;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 60px;
+}
+
+.status {
+    font-size: 5rem;
+    color: #f0f0f0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 2rem;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #007b8a;
+}
+
+#botao-reiniciar {
+    background-color: #ff4500;
+}
+
+#botao-reiniciar:hover {
+    background-color: #e63e00;
+}
+
+#logo-Gfteam {
+    width: 700px;
+    position: center;
+}
+
+#logo-PegadaBJJ {
+    width: 100px;
+    align-self: flex-end;
+}
+
+.imagem-descanso {
+    margin: 5px;
+    display: none;
+    position: center;
+}
+
+#logoArteLivros {
+    width: 700px;
+    display: none;
+    position: center;
+}
+
+#logoBotica {
+    width: 700px;
+    display: none;
+    position: center;
+}
+
+#logoPrecisao {
+    width: 700px;
+    display: none;
+    position: center;
+}
+
+#logoRodolpho {
+    width: 700px;
+    display: none;
+    position: center;
+}
