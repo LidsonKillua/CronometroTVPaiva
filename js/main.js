@@ -1,7 +1,7 @@
 // Constantes do timer
-const TEMPO_TREINO = 5 ; // 5 minutos em segundos
-const TEMPO_DESCANSO = 20 ; // 2 minutos em segundos
-const RODADAS = 2; // Número de rodadas
+const TEMPO_TREINO = 5 * 60; // 5 minutos em segundos
+const TEMPO_DESCANSO = 2 * 60; // 2 minutos em segundos
+const RODADAS = 5; // Número de rodadas
 
 // Variáveis de estado
 let rodadaAtual = 1;
@@ -19,10 +19,10 @@ const somInicio = document.getElementById('som-inicio');
 
 //Imagens
 const logoGfteam = document.getElementById('logo-Gfteam');
-const logoArteLivros = document.getElementById('logoArteLivros');
-const logoBotica = document.getElementById('logoBotica');
-const logoPrecisao = document.getElementById('logoPrecisao');
-const logoRodolpho = document.getElementById('logoRodolpho');
+let imagemAtual = 0;
+let aux = 0;
+let tempoImagem = TEMPO_DESCANSO / 4;        
+const imagens = ['logoArteLivros', 'logoBotica', 'logoPrecisao', 'logoRodolpho'];
 
 // Função para formatar o tempo
 function formatarTempo(segundos) {
@@ -74,11 +74,6 @@ function MostrarPatrocinadores(mostrar) {
     } 
 }
 
-imagemAtual = 0;
-aux = 0;
-tempoImagem = TEMPO_DESCANSO / 4;        
-const imagens = ['logoArteLivros', 'logoBotica', 'logoPrecisao', 'logoRodolpho'];
-
 function TrocarImagens() {      
     if (aux >= tempoImagem) {
         imagemAtual = imagemAtual < 3 ? imagemAtual + 1 : 0;
@@ -100,16 +95,42 @@ function tocargongo() {
     somInicio.play();
 }
 
+function TryTelaCheia() {
+  // Entrar em tela cheia
+  var el = document.body;
+
+  // Supports most browsers and their versions.
+  var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen 
+  || el.mozRequestFullScreen || el.msRequestFullScreen;
+
+  if (requestMethod) {
+
+      // Native full screen.
+      requestMethod.call(el);
+
+  } else if (typeof window.ActiveXObject !== "undefined") {
+
+      // Older IE.
+      var wscript = new ActiveXObject("WScript.Shell");
+
+      if (wscript !== null) {
+      wscript.SendKeys("{F11}");
+      }
+  }
+} 
+
+
 // Função para alternar entre pausar e retomar o timer
 function alternarPausa() {
     if (State == 'Iniciar') {
+        TryTelaCheia();
         State = 'Em treino';
         iniciarTimer();
         tocargongo();
     } else if (State == 'Fim') {
         reiniciar();
     } else {
-        pausado = !pausado
+        pausado = !pausado;
     }
 }
 
@@ -160,12 +181,39 @@ function remover1Minuto() {
     atualizarExibição();
 }
 
+function voltar() {
+    if (State == 'Inicio') {
+        return;
+    } else if (State == 'Fim') {
+        rodadaAtual = RODADAS;
+        tempoAtual = TEMPO_TREINO;
+        State = 'Em treino';
+    } else if (State == 'Em treino' || State == 'Descanso') {
+        tempoAtual = State == 'Em treino' ? TEMPO_TREINO : TEMPO_DESCANSO;
+    }   
+    pausado = false;
+    atualizarExibição();
+}
+
+function avancar() {
+    if (State == 'Fim' || State == 'Inicio') { 
+        return;
+    } else if (State == 'Em treino' || State == 'Descanso') {
+        rodadaAtual = State == 'Descanso' ? rodadaAtual + 1 : rodadaAtual;
+        tempoAtual = State == 'Em treino' ? TEMPO_DESCANSO : TEMPO_TREINO;
+        State = State == 'Em treino' ? 'Descanso' : 'Em treino';
+    }   
+    pausado = false;
+    atualizarExibição();
+    tocargongo();
+}
+
 // Função para mostrar o horário atual
 function atualizarRelogio() {
     const agora = new Date();
     const horas = String(agora.getHours()).padStart(2, '0');
     const minutos = String(agora.getMinutes()).padStart(2, '0');
-    const horaFormatada = `${horas}:${minutos}`;
+    const horaFormatada = horas + ':' + minutos;
     document.getElementById('relógio').textContent = horaFormatada;
 }
 
@@ -174,6 +222,7 @@ const inicializar = function () {
     setInterval(atualizarRelogio, 1000); // Atualiza a cada segundo
     atualizarRelogio(); // Atualiza imediatamente
     atualizarExibição(); // Atualiza a exibição do timer
+    TryTelaCheia(); // Tela cheia
 
     // Adiciona o evento de teclado
     document.addEventListener('keydown', function(e) {
@@ -188,10 +237,10 @@ const inicializar = function () {
                 alternarPausa(); // Alterna entre iniciar e pausar
                 break;
             case 10071: // Botão REWIND
-                reiniciar(); // Reinicia o timer
+            	reiniciar(); // Reinicia o timer
                 break;
             case 10074: // Botão STOP
-                parar(); // Reinicia o timer
+            	reiniciar(); // Reinicia o timer
                 break;                    
             case 10009: // Botão RETURN
                 tizen.application.getCurrentApplication().exit();
@@ -201,7 +250,13 @@ const inicializar = function () {
                 break;
             case 40: // Seta para baixo
                 remover1Minuto(); // Remove 1 minuto do timer
-                break;                    
+                break;  
+            case 37: // Seta para esquerda
+                voltar(); // Volta uma rodada
+                break;
+            case 39: // Seta para direita
+                avancar(); // Avança uma rodada
+                break;                   
             default:
                 console.log('Código da tecla: ' + e.keyCode);
                 break;
