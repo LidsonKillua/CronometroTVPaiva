@@ -182,7 +182,7 @@ function remover1Minuto() {
 }
 
 function voltar() {
-    if (State == 'Inicio') {
+    if (State == 'Iniciar') {
         return;
     } else if (State == 'Fim') {
         rodadaAtual = RODADAS;
@@ -196,16 +196,16 @@ function voltar() {
 }
 
 function avancar() {
-    if (State == 'Fim' || State == 'Inicio') { 
-        return;
-    } else if (State == 'Em treino' || State == 'Descanso') {
+	if (State == 'Descanso' && rodadaAtual == RODADAS) {
+		tempoAtual = 0;
+	} else if (State == 'Em treino' || State == 'Descanso') {
         rodadaAtual = State == 'Descanso' ? rodadaAtual + 1 : rodadaAtual;
         tempoAtual = State == 'Em treino' ? TEMPO_DESCANSO : TEMPO_TREINO;
         State = State == 'Em treino' ? 'Descanso' : 'Em treino';
-    }   
-    pausado = false;
-    atualizarExibição();
-    tocargongo();
+        pausado = false;
+        atualizarExibição();
+        tocargongo();
+    }       
 }
 
 // Função para mostrar o horário atual
