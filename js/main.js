@@ -219,7 +219,8 @@ botaoIniciar.onclick = function () {
   botaoReiniciar.style.display = 'none';
   colunaEsq.style.backgroundColor = '#222';
   colunaDir.style.backgroundColor = 'green';
-  descricao.textContent = 'Round ' + round + '/' + Rounds;      
+  descricao.textContent = 'Round ' + round + '/' + Rounds; 
+  tempoImagem = Math.floor(TempoDescanso / 4 * 1000);     
   setInterval(updateTimer, 1000);           
   somGongo.play();
 };
