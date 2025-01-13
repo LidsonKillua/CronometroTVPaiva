@@ -38,8 +38,6 @@ var relogio = document.getElementById('relógio');
 var timer = document.getElementById('timer');
 var descricao = document.getElementById('desc');
 
-var somGongo = document.getElementById('som-inicio');
-
 function updateTimer() {
   if (pausado || fim) return;
   if (time > 0) {
@@ -64,7 +62,7 @@ function updateTimer() {
       colunaDir.style.backgroundColor = 'green';
       ImagemAtual--;
       mostrarImagensDescanso();
-      somGongo.play();
+      document.getElementById('som-inicio').play();
     } else {
       time = TempoDescanso;
       descanso = true;
@@ -78,7 +76,7 @@ function updateTimer() {
         setInterval(mostrarImagensDescanso, tempoImagem);
       }           
 
-      somGongo.play();
+      document.getElementById('som-inicio').play();
     }
   }
   updateVisualTimer();   
@@ -221,8 +219,8 @@ botaoIniciar.onclick = function () {
   colunaDir.style.backgroundColor = 'green';
   descricao.textContent = 'Round ' + round + '/' + Rounds; 
   tempoImagem = Math.floor(TempoDescanso / 4 * 1000);     
-  setInterval(updateTimer, 1000);           
-  somGongo.play();
+  setInterval(updateTimer, 1000);       
+  document.getElementById('som-inicio').play();
 };
 
 // Evento do botão "Pausar"
@@ -268,7 +266,7 @@ botaoReiniciar.onclick = function () {
   ImagemAtual--;
   mostrarImagensDescanso();
   botaoPausar.focus();
-  somGongo.play();
+  document.getElementById('som-inicio').play();
 };
 
 // Evento do botão "Configurar"
