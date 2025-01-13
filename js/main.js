@@ -1,241 +1,243 @@
-// Constantes do timer
-const TEMPO_TREINO = 5 * 60; // 5 minutos em segundos
-const TEMPO_DESCANSO = 2 * 60; // 2 minutos em segundos
-const RODADAS = 5; // Número de rodadas
+var TempoRound = 5 * 60; //5min
+    var TempoDescanso = 2 * 60; //2min
+    var Rounds = 5;
 
-// Variáveis de estado
-let rodadaAtual = 1;
-let tempoAtual = TEMPO_TREINO;
-let pausado = false;
-let intervaloTimer = null;
-let State = 'Iniciar';
+    var time = 300;
+    var round = 1;
+    var pausado = false;
+    var descanso = false;
+    var fim = false;
+    var tempoImagem = Math.floor(TempoDescanso / 4 * 1000);
+    var ImagemAtual = 0;
+    var auxImg = 0;
+    var auxControles = 0;
 
-// Elementos da interface
-const temporizadorElemento = document.getElementById('temporizador');
-const statusElemento = document.getElementById('status');
-const botãoPausar = document.getElementById('botao-pausar');
-const botãoReiniciar = document.getElementById('botao-reiniciar');
-const somInicio = document.getElementById('som-inicio');
+    var colunaEsq = document.getElementById('colEsc');
+    var colunaDir = document.getElementById('colDir');
 
-//Imagens
-const logoGfteam = document.getElementById('logo-Gfteam');
-let imagemAtual = 0;
-let aux = 0;
-let tempoImagem = TEMPO_DESCANSO / 4;        
-const imagens = ['logoArteLivros', 'logoBotica', 'logoPrecisao', 'logoRodolpho'];
+    var botaoIniciar = document.getElementById('botao-iniciar');
+    var botaoPausar = document.getElementById('botao-pausar');
+    var botaoReiniciar = document.getElementById('botao-reiniciar');
 
-// Função para formatar o tempo
-function formatarTempo(segundos) {
-    const minutos = String(Math.floor(segundos / 60)).padStart(2, '0');
-    const segundosRestantes = String(segundos % 60).padStart(2, '0');
-    return minutos + ':' + segundosRestantes;
-}
+    var controles = document.getElementById('controles');
+    var imgsDescanso = document.getElementById('imagens-descanso');
+    var imgGfteam = document.getElementById('logo-Gfteam');
+    var imgArteLivros = document.getElementById('logoArteLivros');
+    var imgBotica = document.getElementById('logoBotica');
+    var imgPrecisao = document.getElementById('logoPrecisao');
+    var imgRodolpho = document.getElementById('logoRodolpho');
 
-function atualizarExibição() {
-    statusElemento.textContent = 'Round ' + rodadaAtual + '/' + RODADAS;
-    botãoPausar.style.display = 'block';
-    botãoReiniciar.style.display = pausado ? 'block' : 'none';
-    temporizadorElemento.textContent = formatarTempo(tempoAtual);    
-    MostrarPatrocinadores(State == 'Descanso' || State == 'Fim');
+    var relogio = document.getElementById('relógio');
+    var timer = document.getElementById('timer');
+    var descricao = document.getElementById('desc');
 
-    switch (State) {
-        case 'Iniciar':
-            document.body.style.backgroundColor = '#000';
-            botãoPausar.textContent = 'Iniciar';
-            break;
-        case 'Em treino':
-            document.body.style.backgroundColor = '#41a00b';
-            botãoPausar.textContent = pausado ? 'Retomar' : 'Pausar';
-            break;
-        case 'Descanso':
-            document.body.style.backgroundColor = '#742323';
-            botãoPausar.textContent = pausado ? 'Retomar' : 'Pausar';
-            TrocarImagens();
-            break;
-        case 'Fim':
-            document.body.style.backgroundColor = '#000';
-            botãoPausar.style.display = 'none';
-            botãoReiniciar.style.display = 'block';
-            statusElemento.textContent = 'Fim';
-            TrocarImagens();
-            break;
-    } 
-}
+    var somGongo = document.getElementById('som-inicio');
 
-function MostrarPatrocinadores(mostrar) {
-    if (mostrar) {
-        logoGfteam.style.display = 'none';
-        document.getElementById('imagensDescanso').style.display = 'block';
-        document.getElementById('colunaEsq').style.backgroundColor = '#f0f0f0';
-    } else {
-        logoGfteam.style.display = 'block';
-        document.getElementById('imagensDescanso').style.display = 'none';
-        document.getElementById('colunaEsq').style.backgroundColor = null;
-    } 
-}
-
-function TrocarImagens() {      
-    if (aux >= tempoImagem) {
-        imagemAtual = imagemAtual < 3 ? imagemAtual + 1 : 0;
-        aux = 0;
-    }
-    aux++;
-
-    for (let i = 0; i < imagens.length; i++) {
-        if (i == imagemAtual) {
-            document.getElementById(imagens[i]).style.display = 'block';
+    function updateTimer() {
+      if (pausado || fim) return;
+      if (time > 0) {
+        time--;
+      } else {  
+        if (descanso) {
+          round++;
+          if (round > Rounds) {
+            descricao.textContent = 'Fim do treino';
+            botaoIniciar.style.display = 'none';
+            botaoPausar.style.display = 'none';
+            botaoReiniciar.style.display = 'table-cell';
+            colunaDir.style.backgroundColor = 'black';
+            fim = true;
+            botaoReiniciar.focus();
+            return;
+          }
+          time = TempoRound;
+          descanso = false;
+          descricao.textContent = 'Round ' + round + '/' + Rounds;
+          colunaEsq.style.backgroundColor = '#222';
+          colunaDir.style.backgroundColor = 'green';
+          ImagemAtual--;
+          mostrarImagensDescanso();
+          somGongo.play();
         } else {
-            document.getElementById(imagens[i]).style.display = 'none';
+          time = TempoDescanso;
+          descanso = true;
+          descricao.textContent = 'Round ' + round + '/' + Rounds;;
+          colunaEsq.style.backgroundColor = 'white';
+          colunaDir.style.backgroundColor = 'red';
+          ImagemAtual--;
+          mostrarImagensDescanso();
+
+          if (round === 1) {
+            setInterval(mostrarImagensDescanso, tempoImagem);
+          }           
+
+          somGongo.play();
         }
+      }
+      updateVisualTimer();   
     }
-}
 
-// Função para controlar os sons do aplicativo
-function tocargongo() {
-    somInicio.play();
-}
-
-
-// Função para alternar entre pausar e retomar o timer
-function alternarPausa() {
-    if (State == 'Iniciar') {
-        State = 'Em treino';
-        iniciarTimer();
-        tocargongo();
-    } else if (State == 'Fim') {
-        reiniciar();
-    } else {
-        pausado = !pausado;
+    function updateVisualTimer() {
+      var mins = Math.floor(time / 60);
+      var secs = time % 60;
+      timer.textContent = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;   
     }
-}
 
-// Função para iniciar o timer
-function iniciarTimer() {
-    intervaloTimer = setInterval(() => {
-        if (!pausado && State != 'Fim') {
-            if (tempoAtual > 0) {
-                tempoAtual--;
-            } else {
-                if (State == 'Em treino') {
-                    State = 'Descanso';
-                    tempoAtual = TEMPO_DESCANSO;
-                } else {
-                    rodadaAtual++;
+    function atualizarRelogio() {
+      var agora = new Date();
+      var horas = agora.getHours();
+      var minutos = agora.getMinutes();
+      var horaFormatada = (horas < 10 ? '0' : '') + horas + ':' + (minutos < 10 ? '0' : '') + minutos;
+      relogio.textContent = horaFormatada;
 
-                    if (rodadaAtual > RODADAS) {
-                        State = 'Fim';
-                    } else {                    
-                        State = 'Em treino';
-                        tempoAtual = TEMPO_TREINO;
-                    }
-                }
-                tocargongo();
-            }
-        }                
-        atualizarExibição();
-    }, 1000);
-}
+      if (controles.style.display === 'block') {
+        auxControles++;
+        if (auxControles > 3) {
+          controles.style.display = 'none';
+          
+          if (descanso) {
+            imgsDescanso.style.display = 'block';
+          } else {
+            imgGfteam.style.display = 'block';
+          }
+          auxControles = 0;
+        }
+      }
+    }
 
-// Função para reiniciar o timer
-function reiniciar() {
-    rodadaAtual = 1;
-    tempoAtual = TEMPO_TREINO;
-    State = 'Iniciar';
-    pausado = false;
-    clearInterval(intervaloTimer);
-    atualizarExibição();
-}
+    function mostrarImagensDescanso() {      
+      ImagemAtual++;
+      if (ImagemAtual > 3) {
+        ImagemAtual = 0;
+      }
 
-function adicionar1Minuto() {
-    tempoAtual += 60;
-    atualizarExibição();
-}
+      if (descanso) {    
+        imgsDescanso.style.display = 'block';
+        imgGfteam.style.display = 'none';
+        imgArteLivros.style.display = 'none';
+        imgBotica.style.display = 'none';
+        imgPrecisao.style.display = 'none';
+        imgRodolpho.style.display = 'none';
+        
+        switch (ImagemAtual) {
+          case 0:
+            imgArteLivros.style.display = 'block';
+            break;
+          case 1:
+            imgBotica.style.display = 'block';
+            break;
+          case 2:
+            imgPrecisao.style.display = 'block';
+            break;
+          case 3:
+            imgRodolpho.style.display = 'block';
+            break;
+        }
+      } else {
+        imgGfteam.style.display = 'block';
+        imgsDescanso.style.display = 'none';
+        imgArteLivros.style.display = 'none';
+        imgBotica.style.display = 'none';
+        imgPrecisao.style.display = 'none';
+        imgRodolpho.style.display = 'none';
+      }
+    }
 
-function remover1Minuto() {
-    tempoAtual = Math.max(0, tempoAtual - 60);
-    atualizarExibição();
-}
+    function adicionar1Minuto() {
+      time += 60;
+    }
 
-function voltar() {
-    if (State == 'Iniciar') {
-        return;
-    } else if (State == 'Fim') {
-        rodadaAtual = RODADAS;
-        tempoAtual = TEMPO_TREINO;
-        State = 'Em treino';
-    } else if (State == 'Em treino' || State == 'Descanso') {
-        tempoAtual = State == 'Em treino' ? TEMPO_TREINO : TEMPO_DESCANSO;
-    }   
-    pausado = false;
-    atualizarExibição();
-}
+    function remover1Minuto() {
+      time = Math.max(0, time - 60);
+    }
 
-function avancar() {
-	if (State == 'Descanso' && rodadaAtual == RODADAS) {
-		tempoAtual = 0;
-	} else if (State == 'Em treino' || State == 'Descanso') {
-        rodadaAtual = State == 'Descanso' ? rodadaAtual + 1 : rodadaAtual;
-        tempoAtual = State == 'Em treino' ? TEMPO_DESCANSO : TEMPO_TREINO;
-        State = State == 'Em treino' ? 'Descanso' : 'Em treino';
+    function avancar() {
+      if (!fim)
+        time = 0;
+    }
+
+    function retroceder() {
+      if (fim) {
+        fim = false;
+        round = rounds;
+        time = TempoRound;
+        descanso = false;
         pausado = false;
-        atualizarExibição();
-        tocargongo();
-    }       
-}
+      } else if (descanso) {
+        time = TempoDescanso
+      } else {
+        time = TempoRound;
+      }
+    }
 
-// Função para mostrar o horário atual
-function atualizarRelogio() {
-    const agora = new Date();
-    const horas = String(agora.getHours()).padStart(2, '0');
-    const minutos = String(agora.getMinutes()).padStart(2, '0');
-    const horaFormatada = horas + ':' + minutos;
-    document.getElementById('relógio').textContent = horaFormatada;
-}
+    // Evento do botão "Iniciar"
+    botaoIniciar.onclick = function () {
+      fim = false;
+      botaoIniciar.style.display = 'none';
+      botaoPausar.style.display = 'table-cell';
+      botaoPausar.focus();
+      botaoReiniciar.style.display = 'none';
+      colunaEsq.style.backgroundColor = '#222';
+      colunaDir.style.backgroundColor = 'green';
+      descricao.textContent = 'Round ' + round + '/' + Rounds;      
+      setInterval(updateTimer, 1000);           
+      somGongo.play();
+    };
 
-// Função de inicialização
-const inicializar = function () {
-    setInterval(atualizarRelogio, 1000); // Atualiza a cada segundo
-    atualizarRelogio(); // Atualiza imediatamente
-    atualizarExibição(); // Atualiza a exibição do timer
+    // Evento do botão "Pausar"
+    botaoPausar.onclick = function () {
+      pausado = !pausado;
+      botaoPausar.textContent = pausado ? 'Continuar' : 'Pausar';
+      botaoReiniciar.style.display = pausado ? 'table-cell' : 'none';
+    };
 
-    // Adiciona o evento de teclado
-    document.addEventListener('keydown', function(e) {
-        switch(e.keyCode){
-            case 13: // Botão OK
-                alternarPausa(); // Alterna entre iniciar e pausar
-                break;
-            case 10182: // Botão PLAY
-                alternarPausa(); // Alterna entre iniciar e pausar
-                break;
-            case 10073: // Botão PAUSE
-                alternarPausa(); // Alterna entre iniciar e pausar
-                break;
-            case 10071: // Botão REWIND
-            	reiniciar(); // Reinicia o timer
-                break;
-            case 10074: // Botão STOP
-            	reiniciar(); // Reinicia o timer
-                break;                    
-            case 10009: // Botão RETURN
-                tizen.application.getCurrentApplication().exit();
-                break;
-            case 38: // Seta para cima
-                adicionar1Minuto(); // Adiciona 1 minuto ao timer
-                break;
-            case 40: // Seta para baixo
-                remover1Minuto(); // Remove 1 minuto do timer
-                break;  
-            case 37: // Seta para esquerda
-                voltar(); // Volta uma rodada
-                break;
-            case 39: // Seta para direita
-                avancar(); // Avança uma rodada
-                break;                   
-            default:
-                console.log('Código da tecla: ' + e.keyCode);
-                break;
-        }
+    // Evento do botão "Reiniciar"
+    botaoReiniciar.onclick = function () {
+      time = TempoRound;
+      round = 1;
+      fim = false;
+      pausado = false;
+      descanso = false;
+      botaoIniciar.style.display = 'none';
+      botaoPausar.textContent = 'Pausar';
+      botaoPausar.style.display = 'table-cell';
+      botaoReiniciar.style.display = 'none';
+      descricao.textContent = 'Round ' + round + '/' + Rounds;
+      colunaEsq.style.backgroundColor = '#222';
+      colunaDir.style.backgroundColor = 'green';
+      botaoPausar.focus();
+      somGongo.play();
+    };
+
+    document.addEventListener('keydown', function (event) {
+      var keyCode = event.keyCode;
+      
+      if (keyCode === 38 || keyCode === 112) { // Seta para cima ou A controle
+        adicionar1Minuto();
+      } else if (keyCode === 40 || keyCode === 113) { // Seta para baixo ou B controle
+        remover1Minuto();
+      } else if (keyCode === 39 || keyCode === 120) { // Seta para direita ou Info controle
+        avancar();
+      } else if (keyCode === 37 || keyCode === 116) { // Seta para esquerda ou Tools controle
+        retroceder();
+      } else if (keyCode === 114) { // C controle
+        controles.style.display = 'block';
+        auxControles = 0;
+        imgsDescanso.style.display = 'none';
+        imgGfteam.style.display = 'none';
+      } 
     });
-};
 
-window.onload = inicializar;
+    function Iniciar() {
+      time = TempoRound;
+      updateVisualTimer()
+      controles.style.display = 'none';
+      botaoPausar.style.display = 'none';
+      botaoReiniciar.style.display = 'none';
+      descricao.textContent = 'Round ' + round + '/' + Rounds;
+      setInterval(atualizarRelogio, 1000); // Atualiza a cada segundo
+      atualizarRelogio(); // Atualiza imediatamente
+      botaoIniciar.focus();
+    }
+
+    Iniciar()

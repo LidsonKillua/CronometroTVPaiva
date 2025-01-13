@@ -8,29 +8,36 @@
 </head>
 <body>
     <div class="container">
-        <div id="colunaEsq" class="coluna-esquerda">
-            <img id="logo-Gfteam" src="Logos/GFteam.png" alt="">
+      <!-- Coluna esquerda -->
+      <div id="colEsc" class="coluna coluna-esquerda">
+          <img id="logo-Gfteam" src="Logos/GFteam.png" alt="Logo Gfteam">
 
-            <div id="imagensDescanso" style="display: none;">
-                <img id="logoArteLivros" src="Logos/ArteLivros.png" alt="">
-                <img id="logoBotica" src="Logos/botica.png" alt="">
-                <img id="logoPrecisao" src="Logos/Precisão.png" alt="">
-                <img id="logoRodolpho" src="Logos/Rodolpho.png" alt="">
-            </div>
-            
-        </div>
-        <div class="coluna-direita">
-            <div id="relógio"></div>
-            <div id="temporizador"></div>
-            <div id="status" class="status"></div>
-            <button id="botao-pausar" onclick="alternarPausa()">Iniciar</button>
-            <button id="botao-reiniciar" onclick="reiniciar()" style="display: none;">Reiniciar</button>
-            <img id="logo-PegadaBJJ" src="Logos/PegadaBJJ.png" alt="">
-        </div>
-    </div>    
+          <div id="imagens-descanso">
+            <img id="logoArteLivros" src="Logos/ArteLivros.png" alt="Logo Arte Livros">
+            <img id="logoBotica" src="Logos/botica.png" alt="Logo Botica">
+            <img id="logoPrecisao" src="Logos/Precisão.png" alt="Logo Precisão">
+            <img id="logoRodolpho" src="Logos/Rodolpho.png" alt="Logo Rodolpho">
+          </div>
+
+          <img id="controles" src="Logos/controles.jpeg" alt="Controles">
+      </div>
+
+      <!-- Coluna direita -->
+      <div id="colDir" class="coluna coluna-direita">
+          <div id="relógio">Hora atual</div>
+          <div id="timer">05:00</div>
+          <div id="desc">Treino</div>
+
+          <button id="botao-iniciar">Iniciar</button>
+          <button id="botao-pausar">Pausar</button>
+          <button id="botao-reiniciar">Reiniciar</button>
+
+          <img id="logo-PegadaBJJ" src="Logos/PegadaBJJ.png" alt="Logo Pegada BJJ">
+      </div>
+    </div>
 
     <audio id="som-inicio" src="Sons/GongoBoxe.mp3"></audio>
 
-    <script src="js/main.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
