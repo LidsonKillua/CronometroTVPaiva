@@ -42,7 +42,9 @@ function updateTimer() {
   if (pausado || fim) return;
   if (time > 0) {
     time--;
-  } else {  
+  } else {
+    tocarSom();    
+
     if (descanso) {
       round++;
       if (round > Rounds) {
@@ -57,27 +59,18 @@ function updateTimer() {
       }
       time = TempoRound;
       descanso = false;
-      descricao.textContent = 'Round ' + round + '/' + Rounds;
       colunaEsq.style.backgroundColor = '#222';
       colunaDir.style.backgroundColor = 'green';
-      ImagemAtual--;
-      mostrarImagensDescanso();
-      document.getElementById('som-inicio').play();
     } else {
       time = TempoDescanso;
       descanso = true;
-      descricao.textContent = 'Round ' + round + '/' + Rounds;;
       colunaEsq.style.backgroundColor = 'white';
-      colunaDir.style.backgroundColor = 'red';
-      ImagemAtual--;
-      mostrarImagensDescanso();
-
-      if (round === 1) {
-        setInterval(mostrarImagensDescanso, tempoImagem);
-      }           
-
-      document.getElementById('som-inicio').play();
+      colunaDir.style.backgroundColor = 'red';              
     }
+
+    descricao.textContent = 'Round ' + round + '/' + Rounds;
+    ImagemAtual--;
+    mostrarImagensDescanso();
   }
   updateVisualTimer();   
 }
@@ -150,6 +143,7 @@ function mostrarImagensDescanso() {
 
 function adicionar1Minuto() {
   time += 60;
+  updateVisualTimer();
 }
 
 function AddConfig() {
@@ -170,6 +164,7 @@ function AddConfig() {
 
 function remover1Minuto() {
   time = Math.max(0, time - 60);
+  updateVisualTimer();
 }
 
 function RemConfig() {
@@ -207,6 +202,16 @@ function retroceder() {
   }
 }
 
+var audio = null;
+
+function tocarSom() {
+  if (audio) {
+    audio = null;
+  }
+  audio = new Audio('Sons/GongoBoxe.mp3');
+  audio.play();
+}
+
 // Evento do botão "Iniciar"
 botaoIniciar.onclick = function () {
   fim = false;
@@ -219,8 +224,9 @@ botaoIniciar.onclick = function () {
   colunaDir.style.backgroundColor = 'green';
   descricao.textContent = 'Round ' + round + '/' + Rounds; 
   tempoImagem = Math.floor(TempoDescanso / 4 * 1000);     
-  setInterval(updateTimer, 1000);       
-  document.getElementById('som-inicio').play();
+  setInterval(updateTimer, 1000);     
+  setInterval(mostrarImagensDescanso, tempoImagem);  
+  tocarSom();
 };
 
 // Evento do botão "Pausar"
@@ -251,7 +257,7 @@ botaoReiniciar.onclick = function () {
     return;
   }
 
-  document.getElementById('som-inicio').play();
+  tocarSom();
   time = TempoRound;
   round = 1;
   fim = false;
