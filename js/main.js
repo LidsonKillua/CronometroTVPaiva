@@ -251,6 +251,7 @@ botaoReiniciar.onclick = function () {
     return;
   }
 
+  document.getElementById('som-inicio').play();
   time = TempoRound;
   round = 1;
   fim = false;
@@ -265,8 +266,7 @@ botaoReiniciar.onclick = function () {
   colunaDir.style.backgroundColor = 'green';
   ImagemAtual--;
   mostrarImagensDescanso();
-  botaoPausar.focus();
-  document.getElementById('som-inicio').play();
+  botaoPausar.focus();  
 };
 
 // Evento do botão "Configurar"
