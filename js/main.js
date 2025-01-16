@@ -210,11 +210,11 @@ function tocarSom() {
 }
 
 function enviarComandoTocar() {
-  /*const url = "http://192.168.0.5:3000/tocar"; // Substitua pelo IP do servidor
+  /*const url = "http://192.168.0.5:3000/tocar"; 
   fetch(url, {
     method: 'POST'
   }).catch(err => console.error(err));*/
-  const url = "http://192.168.0.5:3000/tocar"; // Substitua pelo IP do servidor
+  const url = "https://tocarsompaivaapi.onrender.com/tocar";
   const xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   xhr.onreadystatechange = function () {
