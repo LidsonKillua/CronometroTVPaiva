@@ -38,12 +38,19 @@ var relogio = document.getElementById('relógio');
 var timer = document.getElementById('timer');
 var descricao = document.getElementById('desc');
 
+var audio = null;
+
 function updateTimer() {
   if (pausado || fim) return;
   if (time > 0) {
     time--;
   } else {
-    tocarSom();    
+    /*if (audio) {
+      audio = null;
+    }*/
+    audio = new Audio('Sons/GongoBoxe.mp3');
+    audio.play(); 
+    audio.play();
 
     if (descanso) {
       round++;
@@ -202,14 +209,21 @@ function retroceder() {
   }
 }
 
-var audio = null;
-
 function tocarSom() {
   if (audio) {
     audio = null;
   }
   audio = new Audio('Sons/GongoBoxe.mp3');
   audio.play();
+}
+
+function enableAudio() {
+  /*if (audio) {
+    audio = null;
+  }*/
+  audio = new Audio('Sons/GongoBoxe.mp3');
+  audio.play();
+  document.getElementById('ativAudio').style.display = 'none';
 }
 
 // Evento do botão "Iniciar"
@@ -225,8 +239,13 @@ botaoIniciar.onclick = function () {
   descricao.textContent = 'Round ' + round + '/' + Rounds; 
   tempoImagem = Math.floor(TempoDescanso / 4 * 1000);     
   setInterval(updateTimer, 1000);     
-  setInterval(mostrarImagensDescanso, tempoImagem);  
-  tocarSom();
+  setInterval(mostrarImagensDescanso, tempoImagem); 
+
+  /*if (audio) {
+    audio = null;
+  }*/
+  audio = new Audio('Sons/GongoBoxe.mp3');
+  audio.play();
 };
 
 // Evento do botão "Pausar"
@@ -257,7 +276,12 @@ botaoReiniciar.onclick = function () {
     return;
   }
 
-  tocarSom();
+  if (audio) {
+    audio = null;
+  }
+  audio = new Audio('Sons/GongoBoxe.mp3');
+  audio.play();
+
   time = TempoRound;
   round = 1;
   fim = false;
