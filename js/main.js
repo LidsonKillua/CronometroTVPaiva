@@ -38,19 +38,14 @@ var relogio = document.getElementById('relógio');
 var timer = document.getElementById('timer');
 var descricao = document.getElementById('desc');
 
-var audio = null;
+var audio = document.getElementById('som');
 
 function updateTimer() {
   if (pausado || fim) return;
   if (time > 0) {
     time--;
   } else {
-    /*if (audio) {
-      audio = null;
-    }*/
-    audio = new Audio('Sons/GongoBoxe.mp3');
-    audio.play(); 
-    audio.play();
+    tocarSom();
 
     if (descanso) {
       round++;
@@ -209,25 +204,21 @@ function retroceder() {
   }
 }
 
-function tocarSom() {
-  if (audio) {
-    audio = null;
-  }
-  audio = new Audio('Sons/GongoBoxe.mp3');
-  audio.play();
+function tocarSom() {  
+  enviarComandoTocar();  // Envia comando para o servidor tocar o som
+  audio.play();  // Toca o som no cliente
 }
 
-function enableAudio() {
-  /*if (audio) {
-    audio = null;
-  }*/
-  audio = new Audio('Sons/GongoBoxe.mp3');
-  audio.play();
-  document.getElementById('ativAudio').style.display = 'none';
+function enviarComandoTocar() {
+  const url = "http://192.168.0.5:3000/tocar"; // Substitua pelo IP do servidor
+  fetch(url, {
+    method: 'POST'
+  }).catch(err => console.error(err));
 }
 
 // Evento do botão "Iniciar"
 botaoIniciar.onclick = function () {
+  tocarSom();
   fim = false;
   botaoConfigurar.style.display = 'none';
   botaoIniciar.style.display = 'none';
@@ -239,13 +230,7 @@ botaoIniciar.onclick = function () {
   descricao.textContent = 'Round ' + round + '/' + Rounds; 
   tempoImagem = Math.floor(TempoDescanso / 4 * 1000);     
   setInterval(updateTimer, 1000);     
-  setInterval(mostrarImagensDescanso, tempoImagem); 
-
-  /*if (audio) {
-    audio = null;
-  }*/
-  audio = new Audio('Sons/GongoBoxe.mp3');
-  audio.play();
+  setInterval(mostrarImagensDescanso, tempoImagem);   
 };
 
 // Evento do botão "Pausar"
@@ -276,12 +261,7 @@ botaoReiniciar.onclick = function () {
     return;
   }
 
-  if (audio) {
-    audio = null;
-  }
-  audio = new Audio('Sons/GongoBoxe.mp3');
-  audio.play();
-
+  tocarSom();
   time = TempoRound;
   round = 1;
   fim = false;
