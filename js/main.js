@@ -210,10 +210,23 @@ function tocarSom() {
 }
 
 function enviarComandoTocar() {
-  const url = "http://192.168.0.5:3000/tocar"; // Substitua pelo IP do servidor
+  /*const url = "http://192.168.0.5:3000/tocar"; // Substitua pelo IP do servidor
   fetch(url, {
     method: 'POST'
-  }).catch(err => console.error(err));
+  }).catch(err => console.error(err));*/
+  const url = "http://192.168.0.5:3000/tocar"; // Substitua pelo IP do servidor
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        console.log('Success:', xhr.responseText);
+      } else {
+        console.error('There has been a problem with your XMLHttpRequest operation:', xhr.statusText);
+      }
+    }
+  };
+  xhr.send();
 }
 
 // Evento do botão "Iniciar"
