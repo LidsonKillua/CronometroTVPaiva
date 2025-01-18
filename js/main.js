@@ -206,6 +206,7 @@ function retroceder() {
 
 function tocarSom() {  
   enviarComandoTocar();  // Envia comando para o servidor tocar o som
+  audio = new Audio('Sons/GongoBoxe.mp3');  // Cria um novo objeto de áudio
   audio.play();  // Toca o som no cliente
 }
 
@@ -214,21 +215,10 @@ function enviarComandoTocar() {
   fetch(url, {
     method: 'POST'
   }).catch(err => console.error(err));*/
-  const url = "https://tocarsompaivaapi.onrender.com/tocar";
-  const xhr = new XMLHttpRequest();
+  var url = "https://tocarsompaivaapi.onrender.com/tocar";
+  var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        console.log('Success:', xhr.responseText);
-      } else {
-        console.error('There has been a problem with your XMLHttpRequest operation:', xhr.statusText);
-      }
-    }
-  };
-  xhr.send();
 }
-
 // Evento do botão "Iniciar"
 botaoIniciar.onclick = function () {
   tocarSom();
