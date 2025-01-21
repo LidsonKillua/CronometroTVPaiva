@@ -204,21 +204,10 @@ function retroceder() {
   }
 }
 
-function tocarSom() {  
-  enviarComandoTocar();  // Envia comando para o servidor tocar o som
-  audio = new Audio('Sons/GongoBoxe.mp3');  // Cria um novo objeto de áudio
+function tocarSom() {
   audio.play();  // Toca o som no cliente
 }
 
-function enviarComandoTocar() {
-  /*const url = "http://192.168.0.5:3000/tocar"; 
-  fetch(url, {
-    method: 'POST'
-  }).catch(err => console.error(err));*/
-  var url = "https://tocarsompaivaapi.onrender.com/tocar";
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-}
 // Evento do botão "Iniciar"
 botaoIniciar.onclick = function () {
   tocarSom();
